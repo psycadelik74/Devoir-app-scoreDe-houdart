@@ -91,8 +91,7 @@ public class ScoreEndpoint {
 
 	@ApiMethod(name = "myscores", httpMethod = HttpMethod.GET)
 	public List<Entity> myscores(@Named("name") String name) {
-		Query q = new Query("Score").setFilter(new FilterPredicate("name", FilterOperator.EQUAL, name)).addSort("score",
-				SortDirection.DESCENDING);
+		Query q = new Query("Score").setFilter(new FilterPredicate("name", FilterOperator.EQUAL, name)).addSort("score",SortDirection.DESCENDING);
         //Query q = new Query("Score").setFilter(new FilterPredicate("name", FilterOperator.EQUAL, name));
 
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
