@@ -38,9 +38,9 @@ import com.google.appengine.api.datastore.Transaction;
 
 @Api(name = "myApi",
      version = "v1",
-     audiences = "927375242383-t21v9ml38tkh2pr30m4hqiflkl3jfohl.apps.googleusercontent.com",
-  	 clientIds = {"927375242383-t21v9ml38tkh2pr30m4hqiflkl3jfohl.apps.googleusercontent.com",
-        "927375242383-jm45ei76rdsfv7tmjv58tcsjjpvgkdje.apps.googleusercontent.com"},
+     audiences = "471622528548-sbt9a67iv16pu4n4k2bulb6ej1olg9rf.apps.googleusercontent.com",
+  	 clientIds = {"471622528548-sbt9a67iv16pu4n4k2bulb6ej1olg9rf.apps.googleusercontent.com",
+        "471622528548-sbt9a67iv16pu4n4k2bulb6ej1olg9rf.apps.googleusercontent.com"},
      namespace =
      @ApiNamespace(
 		   ownerDomain = "helloworld.example.com",
@@ -80,7 +80,10 @@ public class ScoreEndpoint {
 	}
 
 	@ApiMethod(name = "topscores", httpMethod = HttpMethod.GET)
-	public List<Entity> topscores() {
+	public List<Entity> topscores(User user) throws UnauthorizedException {
+		if (user == null) {
+			throw new UnauthorizedException("Invalid credentials");
+		}
 		Query q = new Query("Score").addSort("score", SortDirection.DESCENDING);
 
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -90,7 +93,10 @@ public class ScoreEndpoint {
 	}
 
 	@ApiMethod(name = "myscores", httpMethod = HttpMethod.GET)
-	public List<Entity> myscores(@Named("name") String name) {
+	public List<Entity> myscores(@Named("name") String name, User user) throws UnauthorizedException {
+		if (user == null) {
+			throw new UnauthorizedException("Invalid credentials");
+		}
 		Query q = new Query("Score").setFilter(new FilterPredicate("name", FilterOperator.EQUAL, name)).addSort("score",SortDirection.DESCENDING);
         //Query q = new Query("Score").setFilter(new FilterPredicate("name", FilterOperator.EQUAL, name));
 
@@ -101,8 +107,10 @@ public class ScoreEndpoint {
 	}
 
 	@ApiMethod(name = "addScore", httpMethod = HttpMethod.GET)
-	public Entity addScore(@Named("score") int score, @Named("name") String name) throws UnauthorizedException {
-
+	public Entity addScore(@Named("score") int score, @Named("name") String name, User user) throws UnauthorizedException {
+		if (user == null) {
+			throw new UnauthorizedException("Invalid credentials");
+		}
 		Entity e = new Entity("Score", "" + name + score);
 		e.setProperty("name", name);
 		e.setProperty("score", score);
